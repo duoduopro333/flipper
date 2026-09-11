@@ -1,0 +1,15 @@
+App(
+    name="RF Scanner",
+    appid="rf_scanner",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="rf_scanner_app",
+    stack_size=2048,
+    fap_category="Sub-GHz",
+    fap_version="1.0",
+    fap_description="Scan ISM band, monitor RSSI(433.92M/868.35M)",
+    fap_author="Study",
+    requires=[
+        "gui",
+        "subghz",
+    ],
+)
