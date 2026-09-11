@@ -4,12 +4,22 @@
 #include <gui/modules/text_box.h>
 #include <subghz/subghz.h>
 
-#define FREQ_433 433920000UL
-#define FREQ_868 868350000UL
-const uint32_t scan_freq_list[] = {FREQ_433, FREQ_868};
+const uint32_t scan_freq_list[] = {
+    432800000UL,
+    432950000UL,
+    434500000UL,
+    434550000UL,
+    434750000UL,
+    438450000UL,
+    438500000UL,
+    438800000UL,
+    439500000UL,
+    439550000UL,
+    439750000UL,
+};
 #define FREQ_COUNT (sizeof(scan_freq_list)/sizeof(uint32_t))
 
-int32_t rf_scanner_app(void* p) {
+int32_t uhf_ham_scanner_app(void* p) {
     UNUSED(p);
     SubGhz* subghz = furi_record_open(RECORD_SUBGHZ);
     Gui* gui = furi_record_open(RECORD_GUI);
@@ -33,6 +43,7 @@ int32_t rf_scanner_app(void* p) {
                 lock_freq = !lock_freq;
                 if(lock_freq) {
                     subghz_set_frequency(subghz, current_freq);
+                    subghz_set_modulation(subghz, SubGhzModulationFM238);
                     subghz_start_reception(subghz);
                 }
             }
@@ -45,23 +56,24 @@ int32_t rf_scanner_app(void* p) {
             freq_idx = (freq_idx + 1) % FREQ_COUNT;
             current_freq = scan_freq_list[freq_idx];
             subghz_set_frequency(subghz, current_freq);
+            subghz_set_modulation(subghz, SubGhzModulationFM238);
             subghz_start_reception(subghz);
-            furi_delay_ms(120);
+            furi_delay_ms(150);
         }
 
         int rssi = subghz_get_rssi(subghz);
         FuriString* str = furi_string_alloc();
         furi_string_printf(str,
-            "RF Scanner(ISM免执照频段)\n"
-            "Freq: %.2f MHz\n"
+            "70cm 业余频段扫描\n"
+            "Freq: %.3f MHz\n"
             "RSSI: %d dBm\n"
             "State: %s\n"
-            "OK: Lock/Unlock Freq\nBACK: Exit\n"
+            "OK:锁定频点 | BACK退出\n"
             "Signal: %s",
             (double)current_freq / 1000000.0,
             rssi,
             lock_freq ? "[LOCKED]" : "[SCANNING]",
-            (rssi > -70) ? "STRONG" : (rssi > -90 ? "WEAK" : "NO SIGNAL")
+            (rssi > -70) ? "强信号" : (rssi > -90 ? "弱信号" : "无信号")
         );
         text_box_set_text(text_box, furi_string_get_cstr(str));
         furi_string_free(str);
@@ -75,7 +87,7 @@ int32_t rf_scanner_app(void* p) {
     view_dispatcher_free(view_dispatcher);
     text_box_free(text_box);
 
-    furi_record_close(RECORD_SUBGHZ);
+    furi_record_close(RECORD_GUI);
     furi_record_close(RECORD_GUI);
     return 0;
 }
