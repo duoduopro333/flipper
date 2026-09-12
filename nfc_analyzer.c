@@ -30,6 +30,16 @@ int32_t nfc_analyzer_app(void* p) {
     furi_record_close(RECORD_GUI);
     return 0;
 }
+= furi_record_open(RECORD_GUI);    gui_add_view_port(gui, vp, GuiLayerFullscreen);
+    while(1) {
+        view_port_update(vp);
+        furi_delay_ms(100);
+    }
+    gui_remove_view_port(gui, vp);
+    view_port_free(vp);
+    furi_record_close(RECORD_GUI);
+    return 0;
+}
 lloc();    app->ir = infrared_alloc();
     strncpy(app->info_text, "Ready, Press OK to start scan", TEXT_BUF_LEN);
     return app;
