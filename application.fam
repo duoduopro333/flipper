@@ -1,17 +1,15 @@
 App(
-    name="RF信号识别器",
-    app_id="rf_scanner",
-    app_type=FlipperAppType.EXTERNAL,
-    entry_point="rf_scanner_app",
+    appid="nfc_analyzer",
+    name="NFC分区分析器",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="nfc_analyzer_app",
     stack_size=4096,
     fap_category="Tools",
     fap_version="1.0",
-    fap_description="识别SubGhz、NFC、红外多种射频信号，读取信号基础参数",
+    fap_description="读取Mifare Classic卡片，分析分区权限，查看块数据",
     fap_author="Dev",
     requires=[
         "gui",
-        "subghz",
         "nfc",
-        "infrared",
     ],
 )
