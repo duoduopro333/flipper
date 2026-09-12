@@ -4,12 +4,12 @@ App(
     apptype=FlipperAppType.EXTERNAL,
     entry_point="nfc_analyzer_app",
     stack_size=4096,
+    targets=["f7"],
     fap_category="Tools",
     fap_version="1.0",
-    fap_description="读取Mifare Classic卡片，分析分区权限，查看块数据",
+    fap_description="M1 NFC分析工具",
     fap_author="Dev",
     requires=[
         "gui",
-        "nfc",
     ],
 )
