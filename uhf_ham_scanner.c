@@ -1,35 +1,36 @@
-
 #include <furi.h>
 #include <gui/gui.h>
 #include <gui/view_port.h>
-#include <subghz/subghz.h>
-#include <nfc/nfc.h>
-#include <infrared/infrared.h>
-#include <string.h>
-#include <stdio.h>
 
-#define TEXT_BUF_LEN 64
-
-typedef enum {
-    State_Idle,
-    State_Scan,
-} AppState;
-
-typedef struct {
-    AppState state;
-    SubGhz* subghz;
-    Nfc* nfc;
-    Infrared* ir;
-    char info_text[TEXT_BUF_LEN];
-} RfScannerApp;
-
-static RfScannerApp* rf_scanner_alloc(void) {
-    RfScannerApp* app = malloc(sizeof(RfScannerApp));
-    if(!app) return NULL;
-    memset(app,0,sizeof(RfScannerApp));
-    app->subghz = subghz_alloc();
-    app->nfc = nfc_alloc();
-    app->ir = infrared_alloc();
+static void render(Canvas* canvas, void* ctx) {
+    UNUSED(ctx);
+    canvas_clear(canvas);
+    canvas_draw_str(canvas, 0, 20, "Test App OK!");
+    canvas_draw_str(canvas, 0, 40, "BACK:Exit");
+}
+static void input(InputEvent* event, void* ctx) {
+    UNUSED(ctx);
+    if(event->type == InputTypePress && event->key == InputKeyBack) {
+        furi_exit();
+    }
+}
+int32_t nfc_analyzer_app(void* p) {
+    UNUSED(p);
+    ViewPort* vp = view_port_alloc();
+    view_port_draw_callback_set(vp, render, NULL);
+    view_port_input_callback_set(vp, input, NULL);
+    Gui* gui = furi_record_open(RECORD_GUI);
+    gui_add_view_port(gui, vp, GuiLayerFullscreen);
+    while(1) {
+        view_port_update(vp);
+        furi_delay_ms(100);
+    }
+    gui_remove_view_port(gui, vp);
+    view_port_free(vp);
+    furi_record_close(RECORD_GUI);
+    return 0;
+}
+lloc();    app->ir = infrared_alloc();
     strncpy(app->info_text, "Ready, Press OK to start scan", TEXT_BUF_LEN);
     return app;
 }
