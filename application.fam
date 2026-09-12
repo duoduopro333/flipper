@@ -1,16 +1,17 @@
 App(
-    name="NFC cardfix",
-    app_id="nfc_analyzer",
+    name="RF信号识别器",
+    app_id="rf_scanner",
     app_type=FlipperAppType.EXTERNAL,
-    entry_point="nfc_analyzer_app",
+    entry_point="rf_scanner_app",
     stack_size=4096,
-    fap_category="NFC",
+    fap_category="Tools",
     fap_version="1.0",
-    fap_description="red Mifare card data",
+    fap_description="识别SubGhz、NFC、红外多种射频信号，读取信号基础参数",
     fap_author="Dev",
     requires=[
         "gui",
+        "subghz",
         "nfc",
-        "storage",
+        "infrared",
     ],
 )
